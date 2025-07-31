@@ -1,0 +1,106 @@
+
+/ {
+ leds {
+    compatible = "gpio-leds";
+
+      trig_pin: trig_pin {
+            gpios = <&gpio1 14 GPIO_ACTIVE_HIGH>;
+            label = "Trig Pin D1";
+        };
+
+        echo_pin: echo_pin {
+            gpios = <&gpio1 12 GPIO_ACTIVE_HIGH>;
+            label = "Echo Pin D0";
+        };
+};
+
+aliases {
+        trig = &trig_pin;
+        echo = &echo_pin;
+};
+
+
+   chosen {
+       zephyr,display = &disp1;
+   };
+
+
+   mipi_dbi1 {
+       compatible = "zephyr,mipi-dbi-spi";
+       dc-gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
+       reset-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
+       spi-dev = <&spi0>;
+       write-only;
+       #address-cells = <1>;
+       #size-cells = <0>;
+       status = "okay";
+
+
+       disp1: ssd1680@0 {
+           compatible = "solomon,ssd1680";
+           reg = <0>;
+           busy-gpios = <&gpio1 4 (GPIO_PULL_DOWN | GPIO_ACTIVE_HIGH)>;
+           width = <256>;
+           height = <122>;
+           rotation = <0>;
+           mipi-max-frequency = <400000>;  
+          
+
+
+           full {
+               // lut = [ 22 55 AA 55 AA 55 AA 11 00 00 00 00 00 00 00 00 1E 1E 1E 1E 1E 1E 1E 1E 01 00 00 00 00 00 ];
+           };
+         
+           partial{
+           //     lut = [ 18 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0f 01 00 00 00 00 00 00 00 00 00 00 00 00 ];
+            };
+
+
+           status = "okay";
+       };
+   };
+};
+
+
+
+
+&spi0 {
+   status = "okay";
+   cs-gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
+};
+
+
+&gpio1 {
+   status = "okay";
+};
+
+
+&arduino_i2c {
+   status = "disabled";
+};
+
+
+&arduino_header {
+   gpio-map = <0 0 &gpio0 3 0>,
+              <1 0 &gpio0 4 0>,
+              <2 0 &gpio0 28 0>,
+              <3 0 &gpio0 29 0>,
+              <4 0 &gpio0 30 0>,
+              <5 0 &gpio0 31 0>,
+              <6 0 &gpio1 1 0>,
+              <7 0 &gpio1 2 0>,
+              <8 0 &gpio1 3 0>,
+              <9 0 &gpio1 4 0>,
+              <10 0 &gpio1 5 0>,
+              <11 0 &gpio1 6 0>,
+              <12 0 &gpio1 7 0>,
+              <13 0 &gpio1 8 0>,
+              <14 0 &gpio1 10 0>,
+              <15 0 &gpio1 11 0>,
+              <16 0 &gpio1 12 0>,
+              <17 0 &gpio1 13 0>,
+              <18 0 &gpio1 14 0>,
+              <19 0 &gpio1 15 0>,
+              <20 0 &gpio0 26 0>,
+              <21 0 &gpio0 27 0>;
+};

@@ -1,0 +1,1 @@
+Ultrasonic distance sensor gathers reading and writes to waveshare everytime different distance is gathred.
